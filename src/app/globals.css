@@ -1,21 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --neon-red: #FF4E2D;
+  --lantern-gold: #FFC300;
+  --blossom-pink: #FFC1D4;
+  --midnight-slate: #1C1B20;
+  --light-ivory: #F5F2ED;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--midnight-slate);
+  color: var(--light-ivory);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Animation Keyframes */
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 78, 45, 0.5),
+                 0 0 20px rgba(255, 78, 45, 0.3),
+                 0 0 30px rgba(255, 78, 45, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 78, 45, 0.7),
+                 0 0 25px rgba(255, 78, 45, 0.5),
+                 0 0 35px rgba(255, 78, 45, 0.3);
+  }
+}
+
+/* Custom Animation Classes */
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* Wallet Adapter Button Styles */
+.wallet-adapter-button {
+  background-color: var(--neon-red) !important;
+  color: var(--light-ivory) !important;
+  font-family: 'Orbitron', sans-serif !important;
+  border-radius: 0.375rem !important;
+  height: 2.5rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: var(--lantern-gold) !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: var(--lantern-gold) !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: var(--midnight-slate) !important;
+  border: 1px solid var(--neon-red) !important;
+  border-radius: 0.5rem !important;
+}
+
+.wallet-adapter-modal-button-close {
+  background-color: var(--neon-red) !important;
+}
+
+.wallet-adapter-modal-title {
+  color: var(--light-ivory) !important;
+  font-family: 'Orbitron', sans-serif !important;
+}
+
+.wallet-adapter-modal-list {
+  margin: 0 !important;
+}
+
+.wallet-adapter-modal-list li {
+  padding: 0.5rem !important;
+}
+
+.wallet-adapter-modal-list-more {
+  color: var(--light-ivory) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.wallet-adapter-dropdown {
+  font-family: 'Orbitron', sans-serif !important;
 }

@@ -1,11 +1,8 @@
 'use client';
 
-import { useWallet } from '@/lib/wallet/providers/WalletProvider';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import PhantomButton from './PhantomButton';
 
 export default function Navbar() {
-  const { isConnected } = useWallet();
-
   return (
     <nav className="fixed top-0 w-full bg-[#1C1B20]/80 backdrop-blur-sm border-b border-[#FF4E2D]/20 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,9 +22,7 @@ export default function Navbar() {
             <a href="#" className="text-[#F5F2ED] hover:text-[#FFC300] transition-colors">
               Contact
             </a>
-            <div className="wallet-adapter-button-trigger">
-              <WalletMultiButton />
-            </div>
+            <PhantomButton />
           </div>
         </div>
       </div>

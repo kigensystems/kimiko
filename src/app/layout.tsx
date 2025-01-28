@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { WalletProvider } from "@/lib/wallet/providers/WalletProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,10 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <WalletProvider>
-          {children}
-        </WalletProvider>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body suppressHydrationWarning={true}>
+        {children}
       </body>
     </html>
   );

@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect } from 'react';
+import anime from 'animejs';
+
 const features = [
   {
     title: 'Meet Your AI Trading Companion',
@@ -14,31 +19,54 @@ const features = [
 ];
 
 export default function Features() {
+  useEffect(() => {
+    // Animate features cards fading in
+    anime({
+      targets: '.feature-card',
+      opacity: [0, 1],
+      translateY: [50, 0],
+      delay: anime.stagger(200),
+      easing: 'easeOutExpo',
+      duration: 1500
+    });
+  }, []);
+
+  const cardClasses = `
+    feature-card relative p-10 rounded-2xl overflow-hidden min-h-[400px]
+    backdrop-blur-sm bg-white/[0.02] border border-white/10
+    transform hover:scale-[1.02] transition-all duration-300
+    shadow-[0_0_15px_rgba(255,255,255,0.05)]
+    hover:shadow-[0_0_20px_rgba(255,78,45,0.1)]
+    flex flex-col justify-between
+  `;
+
   return (
-    <div id="features" className="py-24">
+    <div id="features" className="py-32 sm:py-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight font-['Orbitron'] text-[#FF4E2D] sm:text-4xl">
-            Powerful AI Features
+        <div className="text-center mb-20">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight font-['Orbitron'] text-[#F5F2ED]
+            drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]">
+            Features
           </h2>
-          <p className="mt-4 text-lg leading-8 text-[#F5F2ED]/80 max-w-2xl mx-auto">
+          <p className="mt-6 text-xl leading-8 text-[#F5F2ED]/80 max-w-2xl mx-auto">
             Discover how Kimiko enhances your crypto trading experience
           </p>
         </div>
-        <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="relative backdrop-blur-md bg-[#1C1B20]/40 p-8 rounded-xl border border-[#FF4E2D]/20 hover:border-[#FFC300]/50 transition-all hover:bg-[#1C1B20]/60"
+              className={cardClasses}
             >
-              <h3 className="text-lg font-['Orbitron'] text-[#FFC300] mb-4">
-                {feature.title}
-              </h3>
-              <p className="text-[#F5F2ED]/70 leading-relaxed">
-                {feature.description}
-              </p>
-              <div className="absolute inset-0 -z-10 transform-gpu overflow-hidden blur-lg" aria-hidden="true">
-                <div className="relative aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#FF4E2D] to-[#FFC300] opacity-10"></div>
+              <div className="relative z-10">
+                <h3 className="text-2xl font-['Orbitron'] text-[#FFC300] mb-6 font-semibold
+                  drop-shadow-[0_2px_10px_rgba(255,195,0,0.3)]">
+                  {feature.title}
+                </h3>
+                <p className="text-lg text-[#F5F2ED]/80 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             </div>
           ))}

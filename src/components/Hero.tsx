@@ -66,7 +66,7 @@ export default function Hero() {
             </h1>
             <div ref={textRef} className="space-y-6">
               <p className="mt-8 text-lg text-[#F5F2ED]/90 leading-relaxed">
-                Welcome to the future of AI-powered crypto trading. Kimiko and her clever companion Sushi are here to revolutionize your trading experience with advanced market analysis and personalized strategies.
+                Powered by Deep-seek R1 Reasoning model. Kimiko and her clever companion Sushi are here to revolutionize your trading experience with advanced market analysis and personalized strategies.
               </p>
               <p className="text-lg text-[#F5F2ED]/90 leading-relaxed">
                 Together, they combine cutting-edge AI technology with intuitive design to help you navigate the complex world of cryptocurrency trading with confidence.

@@ -53,6 +53,66 @@ export default function Features() {
           </p>
         </div>
 
+        {/* Video Section */}
+        <div className="mb-20 relative rounded-2xl overflow-hidden backdrop-blur-sm bg-white/[0.02] border border-white/10
+          transform hover:scale-[1.01] transition-all duration-300
+          shadow-[0_0_15px_rgba(255,255,255,0.05)]
+          hover:shadow-[0_0_20px_rgba(255,78,45,0.1)]
+          max-w-3xl mx-auto">
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1B20]/50 to-transparent pointer-events-none"></div>
+          <div className="relative min-h-[200px]">
+            {/* Loading Spinner */}
+            <div className="absolute inset-0 flex items-center justify-center bg-[#1C1B20]/30 transition-opacity duration-500"
+                 id="video-loader">
+              <div className="w-12 h-12 border-4 border-[#FFC300] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <video 
+              className="w-full h-auto"
+              autoPlay 
+              loop 
+              playsInline
+              controls
+              preload="auto"
+              controlsList="nodownload"
+              disablePictureInPicture
+              onError={(e) => {
+                console.error('Video failed to load:', e);
+                e.currentTarget.style.display = 'none';
+              }}
+              onLoadedData={(e) => {
+                e.currentTarget.style.opacity = '1';
+                const loader = document.getElementById('video-loader');
+                if (loader) {
+                  loader.style.opacity = '0';
+                  setTimeout(() => {
+                    loader.style.display = 'none';
+                  }, 500);
+                }
+              }}
+              onCanPlay={(e) => {
+                const video = e.currentTarget;
+                if (video.videoHeight) {
+                  video.style.height = `${video.videoHeight}px`;
+                }
+              }}
+              style={{ 
+                opacity: 0, 
+                transition: 'opacity 0.5s ease-in-out',
+                objectFit: 'contain',
+                maxHeight: '80vh'
+              }}
+            >
+              <source src="/Kimiko.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="absolute inset-0 flex items-center justify-center bg-[#1C1B20]/50" 
+                 style={{ display: 'none' }}>
+              <p className="text-[#F5F2ED]/80">Failed to load video</p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <div 

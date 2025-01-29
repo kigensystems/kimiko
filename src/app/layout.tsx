@@ -5,6 +5,10 @@ import { PhantomProvider } from "@/context/PhantomProvider";
 export const metadata: Metadata = {
   title: "Kimiko",
   description: "AI-powered solutions for your creative needs",
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({

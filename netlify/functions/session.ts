@@ -1,9 +1,16 @@
 import { Handler, HandlerEvent } from '@netlify/functions';
+import { getStore } from '@netlify/blobs';
 
-// In-memory session store
-const sessions = new Map<string, boolean>();
+interface SessionData {
+  publicKey: string;
+  createdAt: string;
+  isActive: boolean;
+}
 
 const handler: Handler = async (event: HandlerEvent) => {
+  // Initialize the sessions store
+  const sessions = getStore('sessions');
+
   // Set CORS headers
   const headers = {
     'Access-Control-Allow-Origin': event.headers.origin || '',
@@ -32,15 +39,25 @@ const handler: Handler = async (event: HandlerEvent) => {
       };
     }
 
-    const isActive = sessions.has(publicKey);
-    return {
-      statusCode: isActive ? 200 : 404,
-      headers,
-      body: JSON.stringify({ 
-        message: isActive ? 'Session found' : 'No active session',
-        publicKey: isActive ? publicKey : null
-      })
-    };
+    try {
+      const session = await sessions.get(publicKey, { type: 'json' }) as SessionData | null;
+      const isActive = session !== null && session.isActive;
+      
+      return {
+        statusCode: isActive ? 200 : 404,
+        headers,
+        body: JSON.stringify({ 
+          message: isActive ? 'Session found' : 'No active session',
+          publicKey: isActive ? publicKey : null
+        })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ message: 'Error verifying session' })
+      };
+    }
   }
 
   // Handle session deletion (sign out)
@@ -55,13 +72,26 @@ const handler: Handler = async (event: HandlerEvent) => {
 
     const { publicKey } = JSON.parse(event.body);
     if (publicKey) {
-      sessions.delete(publicKey);
+      try {
+        await sessions.delete(publicKey);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ message: 'Session deleted' })
+        };
+      } catch (error) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ message: 'Error deleting session' })
+        };
+      }
     }
 
     return {
-      statusCode: 200,
+      statusCode: 400,
       headers,
-      body: JSON.stringify({ message: 'Session deleted' })
+      body: JSON.stringify({ message: 'Invalid public key' })
     };
   }
 
@@ -85,14 +115,28 @@ const handler: Handler = async (event: HandlerEvent) => {
       };
     }
 
-    sessions.set(publicKey, true);
-    console.log('Storing session for wallet:', publicKey);
+    try {
+      const sessionData: SessionData = {
+        publicKey,
+        createdAt: new Date().toISOString(),
+        isActive: true
+      };
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ message: 'Session stored', publicKey })
-    };
+      await sessions.setJSON(publicKey, sessionData);
+      console.log('Storing session for wallet:', publicKey);
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ message: 'Session stored', publicKey })
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ message: 'Error storing session' })
+      };
+    }
   }
 
   return {

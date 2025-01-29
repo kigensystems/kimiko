@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@netlify/blobs": "^8.1.0",
     "@netlify/functions": "^3.0.0",
     "@solana/spl-token": "^0.4.11",
     "@solana/web3.js": "^1.98.0",

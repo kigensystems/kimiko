@@ -11,6 +11,7 @@ type NavItem = {
   href?: string;
   isButton?: boolean;
   isHash?: boolean;
+  isExternal?: boolean;
 };
 
 export default function Navbar() {
@@ -40,7 +41,12 @@ export default function Navbar() {
     { name: 'Features', href: '#features', isHash: true },
     { name: 'About', href: '#about', isHash: true },
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'button', isButton: true }
+    { name: 'button', isButton: true },
+    {
+      name: 'X',
+      href: 'https://x.com/kimikosushi',
+      isExternal: true
+    }
   ];
 
   const NavLink = ({ item }: { item: NavItem }) => {
@@ -74,6 +80,30 @@ export default function Navbar() {
       </>
     );
 
+    if (item.isExternal) {
+      return (
+        <a
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={baseClasses}
+        >
+          <span className="relative z-10 text-base transition-colors duration-300">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="inline-block"
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </span>
+        </a>
+      );
+    }
+    
     return item.isHash ? (
       <a href={item.href} className={baseClasses}>
         {content}

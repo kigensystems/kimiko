@@ -40,22 +40,25 @@ export const usePhantom = () => {
           // Verify session exists
           const response = await fetch(`${API_URL}?publicKey=${encodeURIComponent(key)}`, {
             method: 'GET',
+            credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
             }
           });
 
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Failed to verify session');
-          }
-
-          const data = await response.json();
-          if (data.publicKey) {
-            setPublicKey(key);
-            setIsConnected(true);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.publicKey) {
+              setPublicKey(key);
+              setIsConnected(true);
+            } else {
+              // No active session, disconnect
+              await window.solana.disconnect();
+              setPublicKey(null);
+              setIsConnected(false);
+            }
           } else {
-            // No active session, disconnect
+            // No active session or error, disconnect
             await window.solana.disconnect();
             setPublicKey(null);
             setIsConnected(false);
@@ -84,6 +87,7 @@ export const usePhantom = () => {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -110,6 +114,7 @@ export const usePhantom = () => {
     try {
       const response = await fetch(API_URL, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

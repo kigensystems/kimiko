@@ -30,7 +30,8 @@ const connectWebSocket = () => {
     return;
   }
 
-  ws = new WebSocket('wss://pumpportal.fun/api/data');
+  const wsUrl = process.env.WEBSOCKET_URL || 'wss://pumpportal.fun/api/data';
+  ws = new WebSocket(wsUrl);
 
   ws.on('open', function open() {
     if (!ws) return;

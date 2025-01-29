@@ -1,24 +1,21 @@
 const features = [
   {
     title: 'Meet Your AI Trading Companion',
-    description: "Meet Kimiko and her clever companion Sushi, your dedicated crypto trading team. Through sophisticated AI analysis, Kimiko provides personalized trading guidance tailored to your goals. She's always alert, monitoring market conditions and helping you make informed decisions with confidence.",
-    icon: ''
+    description: "Meet Kimiko and her clever companion Sushi, your dedicated crypto trading team. Through sophisticated AI analysis, Kimiko provides personalized trading guidance tailored to your goals. She's always alert, monitoring market conditions and helping you make informed decisions with confidence."
   },
   {
     title: 'Real-Time Market Analysis',
-    description: "Stay ahead of market movements with Kimiko's advanced market monitoring system. Get instant insights on price trends, volume patterns, and market sentiment analysis from social media and news sources. Receive timely alerts about potential opportunities and risks before they impact your portfolio.",
-    icon: ''
+    description: "Stay ahead of market movements with Kimiko's advanced market monitoring system. Get instant insights on price trends, volume patterns, and market sentiment analysis from social media and news sources. Receive timely alerts about potential opportunities and risks before they impact your portfolio."
   },
   {
     title: 'Smart Trading Signals',
-    description: "Transform complex market data into clear trading strategies. Kimiko analyzes multiple data points across blockchain networks to generate actionable trading signals. Whether you're day trading or holding long-term, receive precise entry and exit recommendations backed by comprehensive market analysis.",
-    icon: ''
+    description: "Transform complex market data into clear trading strategies. Kimiko analyzes multiple data points across blockchain networks to generate actionable trading signals. Whether you're day trading or holding long-term, receive precise entry and exit recommendations backed by comprehensive market analysis."
   }
 ];
 
 export default function Features() {
   return (
-    <div id="features" className="py-24 bg-[#1C1B20]">
+    <div id="features" className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight font-['Orbitron'] text-[#FF4E2D] sm:text-4xl">
@@ -32,7 +29,7 @@ export default function Features() {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="relative bg-[#1C1B20] p-8 rounded-xl border border-[#FF4E2D]/20 hover:border-[#FFC300]/50 transition-colors"
+              className="relative backdrop-blur-md bg-[#1C1B20]/40 p-8 rounded-xl border border-[#FF4E2D]/20 hover:border-[#FFC300]/50 transition-all hover:bg-[#1C1B20]/60"
             >
               <h3 className="text-lg font-['Orbitron'] text-[#FFC300] mb-4">
                 {feature.title}

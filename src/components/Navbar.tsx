@@ -87,11 +87,30 @@ export default function Navbar() {
       );
     }
     
-    return item.isHash ? (
-      <a href={item.href} className={baseClasses}>
-        {content}
-      </a>
-    ) : (
+    if (item.isHash) {
+      // If we're not on the home page and it's a hash link, prefix with /
+      const href = pathname === '/' ? (item.href || '') : '/';
+      return (
+        <Link
+          href={href}
+          className={baseClasses}
+          onClick={(e) => {
+            if (pathname !== '/') {
+              // Don't append hash when going to home page
+              return;
+            }
+            // Only handle hash scrolling on home page
+            e.preventDefault();
+            const element = document.querySelector(item.href || '');
+            element?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
+          {content}
+        </Link>
+      );
+    }
+    
+    return (
       <Link href={item.href || ''} className={baseClasses}>
         {content}
       </Link>

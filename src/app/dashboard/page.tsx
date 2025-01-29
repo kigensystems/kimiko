@@ -2,13 +2,11 @@
 
 import { usePhantomContext } from '@/context/PhantomProvider';
 import { useTokens } from '@/hooks/useTokens';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const { isConnected, publicKey } = usePhantomContext();
-  const { tokens, isLoading, error } = useTokens(publicKey);
-  const router = useRouter();
+  const { } = useTokens(publicKey); // Keep the hook call but don't destructure unused variables
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -2,13 +2,28 @@
 
 import { useEffect, useState } from 'react';
 
-interface TokenImageProps {
-  uri: string;
+type MetadataValue = string | number | boolean | null | undefined | Array<{
+  trait_type?: string;
+  value?: string | number;
+}>;
+
+interface TokenMetadata {
   name?: string;
+  description?: string;
+  image?: string;
+  attributes?: Array<{
+    trait_type?: string;
+    value?: string | number;
+  }>;
+  [key: string]: MetadataValue; // For any additional fields in the metadata
 }
 
-export default function TokenImage({ uri, name }: TokenImageProps) {
-  const [metadata, setMetadata] = useState<any>(null);
+interface TokenImageProps {
+  uri: string;
+}
+
+export default function TokenImage({ uri }: TokenImageProps) {
+  const [metadata, setMetadata] = useState<TokenMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

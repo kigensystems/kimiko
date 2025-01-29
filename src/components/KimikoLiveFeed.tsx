@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useKimikoLiveFeed } from '../hooks/useKimikoLiveFeed';
-import TokenImage from './TokenImage';
-import { ErrorBoundary } from 'react-error-boundary';
 
 interface TokenEvent {
   signature?: string;

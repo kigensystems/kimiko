@@ -39,6 +39,16 @@ export default function Hero() {
     });
   }, []);
 
+  const cardClasses = `
+    h-[600px] max-w-xl mx-auto w-full 
+    backdrop-blur-sm bg-white/[0.02] 
+    border border-white/10 rounded-2xl p-12 
+    shadow-[0_0_15px_rgba(255,255,255,0.05)] 
+    hover:shadow-[0_0_20px_rgba(255,78,45,0.1)] 
+    transform hover:scale-[1.02] 
+    transition-all duration-300
+  `;
+
   return (
     <div className="relative pt-32 pb-12 sm:pt-40 md:pt-48">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
@@ -46,18 +56,19 @@ export default function Hero() {
           {/* Left Card - Text Content */}
           <div 
             ref={leftCardRef}
-            className="h-[600px] max-w-xl mx-auto w-full backdrop-blur-sm bg-white/[0.02] border border-white/10 rounded-2xl p-12 shadow-xl transform hover:scale-[1.02] transition-transform duration-300 flex flex-col justify-center"
+            className={`${cardClasses} flex flex-col justify-center`}
           >
             <h1 className="font-['Orbitron'] font-bold tracking-tight text-[#F5F2ED]
-              text-[28px] sm:text-[36px] lg:text-[48px]
-              drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]">
+              text-3xl sm:text-4xl lg:text-5xl
+              drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]
+              leading-tight">
               Meet Kimiko & Sushi
             </h1>
-            <div ref={textRef}>
-              <p className="mt-6 text-lg text-[#F5F2ED]/80 leading-relaxed">
+            <div ref={textRef} className="space-y-6">
+              <p className="mt-8 text-lg text-[#F5F2ED]/90 leading-relaxed">
                 Welcome to the future of AI-powered crypto trading. Kimiko and her clever companion Sushi are here to revolutionize your trading experience with advanced market analysis and personalized strategies.
               </p>
-              <p className="mt-4 text-lg text-[#F5F2ED]/80 leading-relaxed">
+              <p className="text-lg text-[#F5F2ED]/90 leading-relaxed">
                 Together, they combine cutting-edge AI technology with intuitive design to help you navigate the complex world of cryptocurrency trading with confidence.
               </p>
             </div>
@@ -66,7 +77,7 @@ export default function Hero() {
           {/* Right Card - Characters */}
           <div 
             ref={rightCardRef}
-            className="h-[600px] max-w-xl mx-auto w-full backdrop-blur-sm bg-white/[0.02] border border-white/10 rounded-2xl p-12 shadow-xl transform hover:scale-[1.02] transition-transform duration-300"
+            className={cardClasses}
           >
             <div className="relative h-full w-full">
               {/* Kimiko */}

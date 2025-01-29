@@ -23,24 +23,48 @@ export const usePhantom = () => {
   const [isPhantomInstalled, setIsPhantomInstalled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if Phantom is installed and connection state
+  // Check if Phantom is installed and verify session
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const checkConnection = async () => {
-        const isPhantom = !!window.solana?.isPhantom;
-        setIsPhantomInstalled(isPhantom);
-        
-        if (isPhantom && window.solana?.publicKey) {
-          const key = window.solana.publicKey.toString();
-          setPublicKey(key);
-          setIsConnected(true);
-        }
-        
+    const checkConnection = async () => {
+      if (typeof window === 'undefined') {
         setIsLoading(false);
-      };
+        return;
+      }
 
-      checkConnection();
-    }
+      const isPhantom = !!window.solana?.isPhantom;
+      setIsPhantomInstalled(isPhantom);
+
+      if (isPhantom && window.solana?.publicKey) {
+        const key = window.solana.publicKey.toString();
+        try {
+          // Verify session exists
+          const response = await fetch(`${API_URL}?publicKey=${key}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (response.ok) {
+            setPublicKey(key);
+            setIsConnected(true);
+          } else {
+            // No active session, disconnect
+            await window.solana.disconnect();
+            setPublicKey(null);
+            setIsConnected(false);
+          }
+        } catch (error) {
+          console.error('Error verifying session:', error);
+          setPublicKey(null);
+          setIsConnected(false);
+        }
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkConnection();
   }, []);
 
   // Store wallet session

@@ -8,7 +8,7 @@ const handler: Handler = async (event: HandlerEvent) => {
   const headers = {
     'Access-Control-Allow-Origin': event.headers.origin || '',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
     'Access-Control-Allow-Credentials': 'true'
   };
 
@@ -17,6 +17,29 @@ const handler: Handler = async (event: HandlerEvent) => {
     return {
       statusCode: 204,
       headers
+    };
+  }
+
+  // Handle session verification
+  if (event.httpMethod === 'GET') {
+    const publicKey = event.queryStringParameters?.publicKey;
+    
+    if (!publicKey) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ message: 'Missing public key parameter' })
+      };
+    }
+
+    const isActive = sessions.has(publicKey);
+    return {
+      statusCode: isActive ? 200 : 404,
+      headers,
+      body: JSON.stringify({ 
+        message: isActive ? 'Session found' : 'No active session',
+        publicKey: isActive ? publicKey : null
+      })
     };
   }
 

@@ -47,7 +47,10 @@ export default function Dashboard() {
               Token Holdings
             </h2>
             {isLoading && (
-              <div className="w-6 h-6 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+              <div className="flex items-center space-x-3">
+                <div className="w-6 h-6 border-2 border-[#FFC300] border-t-transparent rounded-full animate-spin" />
+                <span className="text-[#F5F2ED]/60">Loading tokens...</span>
+              </div>
             )}
           </div>
 

@@ -22,9 +22,10 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <div
-          className="fixed inset-0 bg-[url('/background.png')] bg-cover bg-center bg-no-repeat z-[-2] opacity-80"
+          className="fixed inset-0 bg-[url('/background.png')] bg-cover bg-center bg-no-repeat z-[-2]"
           style={{ minHeight: '100vh', minWidth: '100vw' }}
         />
+        <div className="fixed inset-0 bg-black/40 z-[-2]" />
         <div className="fixed inset-0 bg-gradient-to-b from-[#1C1B20]/30 via-transparent to-[#1C1B20]/30 z-[-1]" />
         <main className="relative">
           {children}

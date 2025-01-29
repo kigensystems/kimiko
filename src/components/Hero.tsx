@@ -1,38 +1,89 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
+import anime from 'animejs';
 
 export default function Hero() {
-  return (
-    <div className="relative py-8 sm:py-12 md:py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-        {/* Main Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h1 className="font-['Orbitron'] font-bold tracking-tight text-[#F5F2ED]
-            text-[28px] sm:text-[36px] lg:text-[48px]
-            drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]">
-            Meet Kimiko & Sushi
-          </h1>
-        </div>
+  const leftCardRef = useRef(null);
+  const rightCardRef = useRef(null);
+  const textRef = useRef(null);
 
-        {/* Characters Container */}
-        <div className="relative">
-          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-lg overflow-hidden">
-            {/* Radial Gradient Overlay */}
-            <div className="absolute inset-0 bg-radial-gradient from-[#FF4E2D]/5 to-transparent"></div>
-            
-            <div className="absolute inset-0 flex items-center">
+  useEffect(() => {
+    // Animate left card sliding in from left
+    anime({
+      targets: leftCardRef.current,
+      translateX: [-100, 0],
+      opacity: [0, 1],
+      duration: 1200,
+      easing: 'easeOutExpo'
+    });
+
+    // Animate right card sliding in from right
+    anime({
+      targets: rightCardRef.current,
+      translateX: [100, 0],
+      opacity: [0, 1],
+      duration: 1200,
+      easing: 'easeOutExpo'
+    });
+
+    // Animate text fade in
+    anime({
+      targets: textRef.current,
+      opacity: [0, 1],
+      translateY: [20, 0],
+      duration: 1000,
+      delay: 300,
+      easing: 'easeOutExpo'
+    });
+  }, []);
+
+  return (
+    <div className="relative pt-32 pb-12 sm:pt-40 md:pt-48">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          {/* Left Card - Text Content */}
+          <div 
+            ref={leftCardRef}
+            className="h-[600px] max-w-xl mx-auto w-full backdrop-blur-sm bg-white/[0.02] border border-white/10 rounded-2xl p-12 shadow-xl transform hover:scale-[1.02] transition-transform duration-300 flex flex-col justify-center"
+          >
+            <h1 className="font-['Orbitron'] font-bold tracking-tight text-[#F5F2ED]
+              text-[28px] sm:text-[36px] lg:text-[48px]
+              drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]">
+              Meet Kimiko & Sushi
+            </h1>
+            <div ref={textRef}>
+              <p className="mt-6 text-lg text-[#F5F2ED]/80 leading-relaxed">
+                Welcome to the future of AI-powered crypto trading. Kimiko and her clever companion Sushi are here to revolutionize your trading experience with advanced market analysis and personalized strategies.
+              </p>
+              <p className="mt-4 text-lg text-[#F5F2ED]/80 leading-relaxed">
+                Together, they combine cutting-edge AI technology with intuitive design to help you navigate the complex world of cryptocurrency trading with confidence.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Card - Characters */}
+          <div 
+            ref={rightCardRef}
+            className="h-[600px] max-w-xl mx-auto w-full backdrop-blur-sm bg-white/[0.02] border border-white/10 rounded-2xl p-12 shadow-xl transform hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div className="relative h-full w-full">
               {/* Kimiko */}
-              <div className="relative w-[42%] sm:w-[45%] md:w-[48%] h-full transform hover:scale-105 transition-transform duration-300 filter drop-shadow-[0_0_15px_rgba(255,78,45,0.3)] ml-[20%]">
-                <Image
-                  src="/kimiko-hero.svg"
-                  alt="Kimiko"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  priority
-                  className="filter drop-shadow-[0_5px_15px_rgba(255,195,0,0.3)]"
-                />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-[70%] h-[90%] transform hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src="/kimiko-hero.svg"
+                    alt="Kimiko"
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    priority
+                    className="filter drop-shadow-[0_5px_15px_rgba(255,195,0,0.3)]"
+                  />
+                </div>
               </div>
               {/* Sushi */}
-              <div className="absolute bottom-2 sm:bottom-4 left-[60%] w-[22%] sm:w-[24%] md:w-[26%] h-[42%] transform hover:scale-105 transition-transform duration-300">
+              <div className="absolute bottom-4 right-4 w-[30%] h-[30%] transform hover:scale-110 transition-transform duration-300">
                 <Image
                   src="/kimiko-snake.svg"
                   alt="Sushi"

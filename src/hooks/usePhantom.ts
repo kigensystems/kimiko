@@ -15,15 +15,13 @@ export interface PhantomWindow extends Window {
 
 declare const window: PhantomWindow;
 
-const API_URL = '/.netlify/functions/session';
-
 export const usePhantom = () => {
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isPhantomInstalled, setIsPhantomInstalled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if Phantom is installed and verify session
+  // Check if Phantom is installed and connected
   useEffect(() => {
     const checkConnection = async () => {
       if (typeof window === 'undefined') {
@@ -36,100 +34,37 @@ export const usePhantom = () => {
 
       if (isPhantom && window.solana?.publicKey) {
         const key = window.solana.publicKey.toString();
-        try {
-          // Verify session exists
-          const response = await fetch(`${API_URL}?publicKey=${encodeURIComponent(key)}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            if (data.publicKey) {
-              setPublicKey(key);
-              setIsConnected(true);
-            } else {
-              // No active session, disconnect
-              await window.solana.disconnect();
-              setPublicKey(null);
-              setIsConnected(false);
-            }
-          } else {
-            // No active session or error, disconnect
-            await window.solana.disconnect();
-            setPublicKey(null);
-            setIsConnected(false);
-          }
-        } catch (error) {
-          console.error('Error verifying session:', error);
-          // Attempt to disconnect on error
-          try {
-            await window.solana.disconnect();
-          } catch (disconnectError) {
-            console.error('Error disconnecting after session verification failed:', disconnectError);
-          }
-          setPublicKey(null);
-          setIsConnected(false);
-        }
+        setPublicKey(key);
+        setIsConnected(true);
       }
       
       setIsLoading(false);
     };
 
     checkConnection();
+
+    // Listen for account changes
+    const handleAccountChange = () => {
+      if (window.solana?.publicKey) {
+        const key = window.solana.publicKey.toString();
+        setPublicKey(key);
+        setIsConnected(true);
+      } else {
+        setPublicKey(null);
+        setIsConnected(false);
+      }
+    };
+
+    if (window.solana) {
+      window.solana.on('accountChanged', handleAccountChange);
+    }
+
+    return () => {
+      if (window.solana) {
+        window.solana.off('accountChanged', handleAccountChange);
+      }
+    };
   }, []);
-
-  // Store wallet session
-  const storeSession = async (key: string) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ publicKey: key }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to store session');
-      }
-
-      const data = await response.json();
-      if (!data.publicKey) {
-        throw new Error('Invalid response from session storage');
-      }
-    } catch (error) {
-      console.error('Error storing session:', error);
-      throw error;
-    }
-  };
-
-  // Remove wallet session
-  const removeSession = async (key: string) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ publicKey: key }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to remove session');
-      }
-    } catch (error) {
-      console.error('Error removing session:', error);
-      throw error;
-    }
-  };
 
   // Connect to Phantom wallet
   const connect = useCallback(async () => {
@@ -143,18 +78,8 @@ export const usePhantom = () => {
 
       const response = await window.solana.connect();
       const key = response.publicKey.toString();
-      
-      // Attempt to store session
-      try {
-        await storeSession(key);
-        setPublicKey(key);
-        setIsConnected(true);
-      } catch (sessionError) {
-        // If session storage fails, disconnect the wallet
-        console.error('Session storage failed:', sessionError);
-        await window.solana.disconnect();
-        throw sessionError;
-      }
+      setPublicKey(key);
+      setIsConnected(true);
     } catch (error) {
       console.error('Error connecting to Phantom:', error);
       setPublicKey(null);
@@ -170,29 +95,18 @@ export const usePhantom = () => {
     try {
       setIsLoading(true);
 
-      if (window.solana && publicKey) {
-        // Attempt to remove session first
-        try {
-          await removeSession(publicKey);
-        } catch (sessionError) {
-          console.error('Error removing session during disconnect:', sessionError);
-          // Continue with disconnect even if session removal fails
-        }
-
+      if (window.solana) {
         await window.solana.disconnect();
         setPublicKey(null);
         setIsConnected(false);
       }
     } catch (error) {
       console.error('Error disconnecting from Phantom:', error);
-      // Reset state even if there's an error
-      setPublicKey(null);
-      setIsConnected(false);
       throw error;
     } finally {
       setIsLoading(false);
     }
-  }, [publicKey]);
+  }, []);
 
   return {
     isPhantomInstalled,

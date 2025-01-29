@@ -3,6 +3,12 @@
   publish = ".next"
   functions = "netlify/functions"
 
+[functions]
+  # Ensure proper bundling of dependencies
+  node_bundler = "esbuild"
+  # Include source maps for better error tracking
+  included_files = ["netlify/functions/**/*.ts"]
+
 [dev]
   command = "npm run dev"
   port = 8889

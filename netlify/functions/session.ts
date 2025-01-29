@@ -1,29 +1,81 @@
 import { Handler, HandlerEvent } from '@netlify/functions';
 
+// In-memory session store
+const sessions = new Map<string, boolean>();
+
 const handler: Handler = async (event: HandlerEvent) => {
-  if (!event.body) {
+  // Set CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': event.headers.origin || '',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Credentials': 'true'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Missing request body' })
+      statusCode: 204,
+      headers
     };
   }
 
-  const { publicKey } = JSON.parse(event.body);
-  
-  if (!publicKey) {
+  // Handle session deletion (sign out)
+  if (event.httpMethod === 'DELETE') {
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ message: 'Missing request body' })
+      };
+    }
+
+    const { publicKey } = JSON.parse(event.body);
+    if (publicKey) {
+      sessions.delete(publicKey);
+    }
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Missing public key' })
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ message: 'Session deleted' })
     };
   }
 
-  // Store the public key in the function context
-  // This is just a basic implementation - the session will persist only while the function is warm
-  console.log('Storing session for wallet:', publicKey);
+  // Handle session creation
+  if (event.httpMethod === 'POST') {
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ message: 'Missing request body' })
+      };
+    }
+
+    const { publicKey } = JSON.parse(event.body);
+    
+    if (!publicKey) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ message: 'Missing public key' })
+      };
+    }
+
+    sessions.set(publicKey, true);
+    console.log('Storing session for wallet:', publicKey);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ message: 'Session stored', publicKey })
+    };
+  }
 
   return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'Session stored', publicKey })
+    statusCode: 405,
+    headers,
+    body: JSON.stringify({ message: 'Method not allowed' })
   };
 };
 

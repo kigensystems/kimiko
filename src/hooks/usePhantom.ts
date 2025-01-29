@@ -7,6 +7,7 @@ export interface PhantomWindow extends Window {
     connect(): Promise<{ publicKey: { toString(): string } }>;
     disconnect(): Promise<void>;
     isPhantom?: boolean;
+    publicKey?: { toString(): string };
     on: (event: string, callback: () => void) => void;
     off: (event: string, callback: () => void) => void;
   };
@@ -20,11 +21,25 @@ export const usePhantom = () => {
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isPhantomInstalled, setIsPhantomInstalled] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check if Phantom is installed
+  // Check if Phantom is installed and connection state
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsPhantomInstalled(!!window.solana?.isPhantom);
+      const checkConnection = async () => {
+        const isPhantom = !!window.solana?.isPhantom;
+        setIsPhantomInstalled(isPhantom);
+        
+        if (isPhantom && window.solana?.publicKey) {
+          const key = window.solana.publicKey.toString();
+          setPublicKey(key);
+          setIsConnected(true);
+        }
+        
+        setIsLoading(false);
+      };
+
+      checkConnection();
     }
   }, []);
 
@@ -44,6 +59,7 @@ export const usePhantom = () => {
       }
     } catch (error) {
       console.error('Error storing session:', error);
+      throw error;
     }
   };
 
@@ -63,12 +79,15 @@ export const usePhantom = () => {
       }
     } catch (error) {
       console.error('Error removing session:', error);
+      throw error;
     }
   };
 
   // Connect to Phantom wallet
   const connect = useCallback(async () => {
     try {
+      setIsLoading(true);
+
       if (!window.solana) {
         window.open('https://phantom.app/', '_blank');
         return;
@@ -76,17 +95,22 @@ export const usePhantom = () => {
 
       const response = await window.solana.connect();
       const key = response.publicKey.toString();
+      await storeSession(key);
       setPublicKey(key);
       setIsConnected(true);
-      await storeSession(key);
     } catch (error) {
       console.error('Error connecting to Phantom:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   // Disconnect from Phantom wallet
   const disconnect = useCallback(async () => {
     try {
+      setIsLoading(true);
+
       if (window.solana && publicKey) {
         await removeSession(publicKey);
         await window.solana.disconnect();
@@ -95,12 +119,16 @@ export const usePhantom = () => {
       }
     } catch (error) {
       console.error('Error disconnecting from Phantom:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   }, [publicKey]);
 
   return {
     isPhantomInstalled,
     isConnected,
+    isLoading,
     publicKey,
     connect,
     disconnect,

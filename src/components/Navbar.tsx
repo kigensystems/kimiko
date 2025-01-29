@@ -3,15 +3,19 @@
 import { useEffect, useState } from 'react';
 import PhantomButton from './PhantomButton';
 import anime from 'animejs';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 type NavItem = {
   name: string;
   href?: string;
   isButton?: boolean;
+  isHash?: boolean;
 };
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Animate nav items fading in
@@ -33,11 +37,53 @@ export default function Navbar() {
   }, []);
 
   const navItems: NavItem[] = [
-    { name: 'Features', href: '#features' },
-    { name: 'About', href: '#about' },
+    { name: 'Features', href: '#features', isHash: true },
+    { name: 'About', href: '#about', isHash: true },
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'button', isButton: true }
   ];
+
+  const NavLink = ({ item }: { item: NavItem }) => {
+    const baseClasses = `
+      nav-item relative group px-6 py-2
+      ${pathname === item.href ? 'text-[#FFC300]' : 'text-[#F5F2ED] hover:text-[#FFC300]'}
+    `;
+
+    const content = (
+      <>
+        {/* Text */}
+        <span className="relative z-10 text-base uppercase tracking-[0.2em] font-semibold transition-colors duration-300">
+          {item.name}
+        </span>
+
+        {/* Animated underline with glow */}
+        <span className={`
+          absolute -bottom-1 h-[2px] bg-gradient-to-r from-[#FF4E2D] to-[#FFC300] transition-all duration-300
+          ${pathname === item.href 
+            ? 'left-[10%] w-4/5' 
+            : 'left-1/2 w-0 group-hover:w-4/5 group-hover:left-[10%]'
+          }
+        `} />
+        <span className={`
+          absolute -bottom-1 h-[2px] bg-[#FFC300] blur-sm transition-all duration-300
+          ${pathname === item.href 
+            ? 'left-[10%] w-4/5' 
+            : 'left-1/2 w-0 group-hover:w-4/5 group-hover:left-[10%]'
+          }
+        `} />
+      </>
+    );
+
+    return item.isHash ? (
+      <a href={item.href} className={baseClasses}>
+        {content}
+      </a>
+    ) : (
+      <Link href={item.href || ''} className={baseClasses}>
+        {content}
+      </Link>
+    );
+  };
 
   return (
     <nav className={`
@@ -57,20 +103,7 @@ export default function Navbar() {
                   <PhantomButton />
                 </div>
               ) : (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="nav-item relative group px-6 py-2"
-                >
-                  {/* Text */}
-                  <span className="relative z-10 text-[#F5F2ED] text-base uppercase tracking-[0.2em] font-semibold transition-colors duration-300 group-hover:text-[#FFC300]">
-                    {item.name}
-                  </span>
-
-                  {/* Animated underline with glow */}
-                  <span className="absolute -bottom-1 left-1/2 w-0 h-[2px] bg-gradient-to-r from-[#FF4E2D] to-[#FFC300] transition-all duration-300 group-hover:w-4/5 group-hover:left-[10%]" />
-                  <span className="absolute -bottom-1 left-1/2 w-0 h-[2px] bg-[#FFC300] blur-sm transition-all duration-300 group-hover:w-4/5 group-hover:left-[10%]" />
-                </a>
+                <NavLink key={item.name} item={item} />
               )
             ))}
           </div>

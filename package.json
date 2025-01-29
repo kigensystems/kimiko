@@ -10,8 +10,13 @@
   },
   "dependencies": {
     "@netlify/functions": "^3.0.0",
+    "@solana/spl-token": "^0.4.11",
+    "@solana/web3.js": "^1.98.0",
     "@types/animejs": "^3.1.13",
+    "@types/cookie": "^0.6.0",
+    "alchemy-sdk": "^3.5.1",
     "animejs": "^3.2.2",
+    "cookie": "^1.0.2",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

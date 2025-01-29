@@ -22,7 +22,7 @@ interface TokenEvent {
 
 let ws: WebSocket | null = null;
 let messageBuffer: TokenEvent[] = [];
-const MAX_BUFFER_SIZE = 10;
+const MAX_BUFFER_SIZE = 6;
 
 const connectWebSocket = () => {
   if (ws?.readyState === WebSocket.OPEN) {
@@ -35,7 +35,7 @@ const connectWebSocket = () => {
   ws.on('open', function open() {
     if (!ws) return;
 
-    console.log('Connected to PumpPortal WebSocket');
+    console.log('Connected to Kimiko Live Feed WebSocket');
 
     // Subscribe to new token events
     const tokenPayload: SubscribePayload = {

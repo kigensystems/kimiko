@@ -15,7 +15,7 @@ interface TokenEvent {
   uri?: string;
 }
 
-export function usePumpPortal() {
+export function useKimikoLiveFeed() {
   const [isConnected, setIsConnected] = useState(false);
   const [data, setData] = useState<TokenEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function usePumpPortal() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch('/.netlify/functions/pumpportal');
+        const response = await fetch('/.netlify/functions/kimiko-live-feed');
         if (!response.ok) throw new Error('Failed to fetch updates');
         
         const newData = await response.json();
@@ -48,7 +48,7 @@ export function usePumpPortal() {
 
   const connect = useCallback(async () => {
     try {
-      const response = await fetch('/.netlify/functions/pumpportal', {
+      const response = await fetch('/.netlify/functions/kimiko-live-feed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export function usePumpPortal() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to connect to PumpPortal');
+        throw new Error('Failed to connect to Kimiko Live Feed');
       }
 
       const { currentData } = await response.json();
@@ -77,7 +77,7 @@ export function usePumpPortal() {
 
   const disconnect = useCallback(async () => {
     try {
-      await fetch('/.netlify/functions/pumpportal', {
+      await fetch('/.netlify/functions/kimiko-live-feed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

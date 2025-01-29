@@ -41,7 +41,7 @@ export default function Navbar() {
     { name: 'Features', href: '#features', isHash: true },
     { name: 'About', href: '#about', isHash: true },
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Real-time', href: '/realtime' },
+    { name: 'Feed', href: '#feed', isHash: true },
     { name: 'button', isButton: true },
     {
       name: 'X',

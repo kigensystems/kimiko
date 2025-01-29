@@ -7,56 +7,38 @@ interface TokenImageProps {
   name?: string;
 }
 
-interface TokenMetadata {
-  image?: string;
-  properties?: {
-    files?: Array<{ uri: string; type: string; }>;
-  };
-}
-
 export default function TokenImage({ uri, name }: TokenImageProps) {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
         setIsLoading(true);
-        const metadataUrl = uri.startsWith('https://ipfs.io') 
-          ? uri 
-          : `https://ipfs.io/ipfs/${uri.replace('ipfs://', '')}`;
-
-        const response = await fetch(metadataUrl);
-        const metadata: TokenMetadata = await response.json();
-
-        // Try to get image URL from metadata
-        let finalImageUrl = metadata.image;
+        // Extract IPFS hash from URI
+        const hash = uri.replace('ipfs://', '').replace('https://ipfs.io/ipfs/', '');
+        console.log('Fetching metadata for hash:', hash);
         
-        // If no direct image, try to find it in files
-        if (!finalImageUrl && metadata.properties?.files) {
-          const imageFile = metadata.properties.files.find(
-            file => file.type?.startsWith('image/')
-          );
-          if (imageFile) {
-            finalImageUrl = imageFile.uri;
-          }
+        // Use our proxy endpoint
+        const response = await fetch(`/.netlify/functions/proxy-ipfs?hash=${hash}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch metadata: ${response.status}`);
         }
-
-        // Convert IPFS URL if needed
-        if (finalImageUrl?.startsWith('ipfs://')) {
-          finalImageUrl = `https://ipfs.io/ipfs/${finalImageUrl.replace('ipfs://', '')}`;
-        }
-
-        setImageUrl(finalImageUrl || null);
+        
+        const data = await response.json();
+        console.log('Received metadata:', data);
+        setMetadata(data);
       } catch (error) {
         console.error('Error fetching metadata:', error);
-        setImageUrl(null);
+        setMetadata(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchMetadata();
+    if (uri) {
+      fetchMetadata();
+    }
   }, [uri]);
 
   if (isLoading) {
@@ -70,23 +52,23 @@ export default function TokenImage({ uri, name }: TokenImageProps) {
     );
   }
 
-  if (!imageUrl) {
-    return null;
+  if (!metadata) {
+    return (
+      <div className="mt-4">
+        <div className="relative aspect-square w-full max-w-[200px] mx-auto rounded-lg overflow-hidden bg-[#1C1B20]/50
+          flex items-center justify-center">
+          <div className="text-[#F5F2ED]/40 text-sm">No metadata available</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="mt-4">
-      <div className="relative aspect-square w-full max-w-[200px] mx-auto rounded-lg overflow-hidden bg-[#1C1B20]/50">
-        <img
-          src={imageUrl}
-          alt={name || 'Token Image'}
-          className="object-cover w-full h-full"
-          onError={(e) => {
-            e.currentTarget.src = '/kimiko-hero.svg';
-            e.currentTarget.className = 'object-contain w-full h-full p-4';
-          }}
-        />
-      </div>
+    <div className="mt-4 space-y-2 text-sm">
+      <div className="text-[#F5F2ED]/60">Raw Metadata:</div>
+      <pre className="p-4 rounded-lg bg-[#1C1B20]/50 overflow-x-auto text-[#F5F2ED]/80">
+        {JSON.stringify(metadata, null, 2)}
+      </pre>
     </div>
   );
 }

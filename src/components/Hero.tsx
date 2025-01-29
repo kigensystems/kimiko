@@ -58,9 +58,9 @@ export default function Hero() {
             ref={leftCardRef}
             className={`${cardClasses} flex flex-col justify-center`}
           >
-            <h1 className="font-['Orbitron'] font-bold tracking-tight text-[#F5F2ED]
+            <h1 className="font-['Orbitron'] font-bold tracking-tight text-[#FFC300]
               text-3xl sm:text-4xl lg:text-5xl
-              drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]
+              drop-shadow-[0_2px_10px_rgba(255,195,0,0.3)]
               leading-tight">
               Meet Kimiko & Sushi
             </h1>

@@ -5,8 +5,8 @@ import anime from 'animejs';
 
 const features = [
   {
-    title: 'Meet Your AI Trading Companion',
-    description: "Meet Kimiko and her clever companion Sushi, your dedicated crypto trading team. Through sophisticated AI analysis, Kimiko provides personalized trading guidance tailored to your goals. She's always alert, monitoring market conditions and helping you make informed decisions with confidence."
+    title: 'Cross-Chain DeFi Integration',
+    description: "Seamlessly interact with multiple blockchain ecosystems through our integrated platform. Access leading DeFi protocols, execute cross-chain swaps, and capitalize on arbitrage opportunities with ease. Kimiko navigates the complex world of decentralized finance for you, optimizing gas fees and suggesting the most efficient trading routes across networks."
   },
   {
     title: 'Real-Time Market Analysis',
@@ -20,6 +20,16 @@ const features = [
 
 export default function Features() {
   useEffect(() => {
+    // Animate features cards fading in
+    anime({
+      targets: '.feature-card',
+      opacity: [0, 1],
+      translateY: [50, 0],
+      delay: anime.stagger(200),
+      easing: 'easeOutExpo',
+      duration: 1500
+    });
+
     // Animate features cards fading in
     anime({
       targets: '.feature-card',
@@ -44,8 +54,8 @@ export default function Features() {
     <div id="features" className="py-32 sm:py-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight font-['Orbitron'] text-[#F5F2ED]
-            drop-shadow-[0_2px_10px_rgba(255,78,45,0.3)]">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight font-['Orbitron'] text-[#FFC300]
+            drop-shadow-[0_2px_10px_rgba(255,195,0,0.3)]">
             Features
           </h2>
           <p className="mt-6 text-xl leading-8 text-[#F5F2ED]/80 max-w-2xl mx-auto">
@@ -53,62 +63,105 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Video Section */}
-        <div className="mb-20 relative rounded-2xl overflow-hidden backdrop-blur-sm bg-white/[0.02] border border-white/10
-          transform hover:scale-[1.01] transition-all duration-300
-          shadow-[0_0_15px_rgba(255,255,255,0.05)]
-          hover:shadow-[0_0_20px_rgba(255,78,45,0.1)]
-          max-w-3xl mx-auto">
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1B20]/50 to-transparent pointer-events-none"></div>
-          <div className="relative min-h-[200px]">
-            {/* Loading Spinner */}
-            <div className="absolute inset-0 flex items-center justify-center bg-[#1C1B20]/30 transition-opacity duration-500"
-                 id="video-loader">
-              <div className="w-12 h-12 border-4 border-[#FFC300] border-t-transparent rounded-full animate-spin"></div>
+        <div className="my-20 relative rounded-2xl overflow-hidden backdrop-blur-xl bg-white/[0.02] border border-[#1C1B20]/50
+          transform hover:scale-[1.01] transition-all duration-700
+          shadow-[0_0_30px_rgba(255,195,0,0.1)]
+          hover:shadow-[0_0_50px_rgba(255,78,45,0.2)]
+          max-w-3xl mx-auto
+          border-t border-b border-[#1C1B20]/50">
+          {/* Holographic Lines */}
+          <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(255,195,0,0.05)_50%,transparent_100%)] bg-[length:100%_4px] animate-scan pointer-events-none z-20"></div>
+          {/* Glow Effects */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FF4E2D]/20 via-transparent to-[#FFC300]/20 opacity-50 mix-blend-overlay pointer-events-none z-20"></div>
+          <div className="relative min-h-[200px] group">
+            {/* Edge Glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#FFC300]/50 to-transparent"></div>
+              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#FF4E2D]/50 to-transparent"></div>
+              <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-[#FFC300]/50 to-transparent"></div>
+              <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-[#FF4E2D]/50 to-transparent"></div>
             </div>
             <video 
-              className="w-full h-auto"
-              autoPlay 
-              loop 
+              className="w-full h-auto relative z-20 mix-blend-screen animate-flicker backdrop-blur-sm cursor-pointer"
+              loop
+              muted={false}
               playsInline
-              controls
               preload="auto"
-              controlsList="nodownload"
-              disablePictureInPicture
+              onClick={(e) => {
+                const video = e.currentTarget;
+                const playIndicator = document.getElementById('play-indicator');
+                if (video.paused) {
+                  video.play();
+                  playIndicator?.classList.add('opacity-0', 'pointer-events-none');
+                } else {
+                  video.pause();
+                  playIndicator?.classList.remove('opacity-0', 'pointer-events-none');
+                }
+              }}
+              onPause={(e) => {
+                const video = e.currentTarget;
+                const playIndicator = document.getElementById('play-indicator');
+                video.style.opacity = '0.8';
+                video.style.filter = 'brightness(0.9) contrast(1.1)';
+                playIndicator?.classList.remove('opacity-0', 'pointer-events-none');
+              }}
+              onPlay={(e) => {
+                const video = e.currentTarget;
+                const playIndicator = document.getElementById('play-indicator');
+                video.style.opacity = '1';
+                video.style.filter = 'brightness(1.1) contrast(1.1)';
+                playIndicator?.classList.add('opacity-0', 'pointer-events-none');
+              }}
               onError={(e) => {
                 console.error('Video failed to load:', e);
                 e.currentTarget.style.display = 'none';
               }}
               onLoadedData={(e) => {
                 e.currentTarget.style.opacity = '1';
-                const loader = document.getElementById('video-loader');
-                if (loader) {
-                  loader.style.opacity = '0';
-                  setTimeout(() => {
-                    loader.style.display = 'none';
-                  }, 500);
-                }
-              }}
-              onCanPlay={(e) => {
-                const video = e.currentTarget;
-                if (video.videoHeight) {
-                  video.style.height = `${video.videoHeight}px`;
-                }
               }}
               style={{ 
                 opacity: 0, 
-                transition: 'opacity 0.5s ease-in-out',
+                transition: 'all 0.5s ease-in-out',
                 objectFit: 'contain',
-                maxHeight: '80vh'
+                maxHeight: '80vh',
+                filter: 'brightness(1.1) contrast(1.1)',
+                WebkitBackfaceVisibility: 'hidden',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)',
+                willChange: 'opacity, filter'
               }}
             >
               <source src="/Kimiko.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-[#1C1B20]/15 mix-blend-multiply pointer-events-none z-30"></div>
+            {/* Error State */}
             <div className="absolute inset-0 flex items-center justify-center bg-[#1C1B20]/50" 
                  style={{ display: 'none' }}>
               <p className="text-[#F5F2ED]/80">Failed to load video</p>
+            </div>
+            {/* Play/Pause Indicator */}
+            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 z-40 cursor-pointer group/play"
+                 id="play-indicator"
+                 onClick={(e) => {
+                   const video = document.querySelector('video');
+                   if (video) {
+                     if (video.paused) {
+                       video.play();
+                       e.currentTarget.classList.add('opacity-0');
+                       e.currentTarget.classList.add('pointer-events-none');
+                     } else {
+                       video.pause();
+                       e.currentTarget.classList.remove('opacity-0');
+                       e.currentTarget.classList.remove('pointer-events-none');
+                     }
+                   }
+                 }}>
+              <div className="w-24 h-24 rounded-full bg-[#1C1B20]/50 backdrop-blur-sm flex items-center justify-center border border-[#FFC300]/20
+                           transform transition-all duration-300 group-hover/play:scale-110 group-hover/play:bg-[#1C1B20]/70">
+                <div className="text-[#FFC300] text-6xl transform translate-x-0.5">▶</div>
+              </div>
             </div>
           </div>
         </div>

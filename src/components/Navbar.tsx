@@ -51,33 +51,15 @@ export default function Navbar() {
 
   const NavLink = ({ item }: { item: NavItem }) => {
     const baseClasses = `
-      nav-item relative group px-6 py-2
-      ${pathname === item.href ? 'text-[#FFC300]' : 'text-[#F5F2ED] hover:text-[#FFC300]'}
+      nav-item px-6 py-2
+      ${pathname === item.href ? 'text-[#FFC300]' : 'text-[#F5F2ED]'}
+      transition-colors duration-300 hover:text-[#FFC300]
     `;
 
     const content = (
-      <>
-        {/* Text */}
-        <span className="relative z-10 text-base uppercase tracking-[0.2em] font-semibold transition-colors duration-300">
-          {item.name}
-        </span>
-
-        {/* Animated underline with glow */}
-        <span className={`
-          absolute -bottom-1 h-[2px] bg-gradient-to-r from-[#FF4E2D] to-[#FFC300] transition-all duration-300
-          ${pathname === item.href 
-            ? 'left-[10%] w-4/5' 
-            : 'left-1/2 w-0 group-hover:w-4/5 group-hover:left-[10%]'
-          }
-        `} />
-        <span className={`
-          absolute -bottom-1 h-[2px] bg-[#FFC300] blur-sm transition-all duration-300
-          ${pathname === item.href 
-            ? 'left-[10%] w-4/5' 
-            : 'left-1/2 w-0 group-hover:w-4/5 group-hover:left-[10%]'
-          }
-        `} />
-      </>
+      <span className="relative z-10 text-base uppercase tracking-[0.2em] font-semibold transition-colors duration-300">
+        {item.name}
+      </span>
     );
 
     if (item.isExternal) {

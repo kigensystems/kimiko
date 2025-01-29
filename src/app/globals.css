@@ -12,6 +12,30 @@
   --light-ivory: #F5F2ED;
 }
 
+@keyframes scan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+
+.animate-scan {
+  animation: scan 8s linear infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+  25%, 75% { opacity: 0.96; }
+  12%, 37%, 63%, 88% { opacity: 0.97; }
+}
+
+.animate-flicker {
+  animation: flicker 8s infinite;
+}
+
 body {
   color: var(--light-ivory);
   font-family: 'Inter', sans-serif;

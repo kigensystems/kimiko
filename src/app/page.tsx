@@ -17,14 +17,14 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#1C1B20] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-[#F5F2ED] text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#1C1B20]">
+    <main className="min-h-screen">
       <Navbar />
       <Hero />
       <Features />

@@ -15,7 +15,7 @@ export default function Hero() {
 
         {/* Characters Container */}
         <div className="relative">
-          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-lg overflow-hidden bg-gradient-to-b from-[#1C1B20] via-[#1C1B20]/90 to-[#1C1B20]/70">
+          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-lg overflow-hidden">
             {/* Radial Gradient Overlay */}
             <div className="absolute inset-0 bg-radial-gradient from-[#FF4E2D]/5 to-transparent"></div>
             

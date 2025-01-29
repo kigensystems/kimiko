@@ -13,7 +13,6 @@
 }
 
 body {
-  background-color: var(--midnight-slate);
   color: var(--light-ivory);
   font-family: 'Inter', sans-serif;
 }
